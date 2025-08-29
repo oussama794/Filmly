@@ -1,11 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import Auth from "./pages/Auth";
-import Layout from "./components/Layout";
+import Layout from "./layout/Layout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Search from "./pages/Search";
-
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
