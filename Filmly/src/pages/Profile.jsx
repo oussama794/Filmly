@@ -10,7 +10,7 @@ export default function Profile() {
   const [recentMovies, setRecentMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   
-  // Mock top 3 favorite movies
+  // Mock top 3 favorite movies (since we don't have a backend)
   const [topMovies] = useState([
     {
       imdbID: "tt0111161",
