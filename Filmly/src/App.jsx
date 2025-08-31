@@ -4,7 +4,7 @@ import Auth from "./pages/Auth";
 import Layout from "./layout/Layout";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import Search from "./pages/Search";
+import SearchPage from "./pages/Search";
 
 const PrivateRoute = ({ children }) => {
   const { user } = useAuth();
@@ -32,7 +32,7 @@ export default function App() {
               path="/search"
               element={
                 <PrivateRoute>
-                  <Search />
+                  <SearchPage />
                 </PrivateRoute>
               }
             />

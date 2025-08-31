@@ -46,7 +46,7 @@ export default function MovieDetail({ movie, onBack }) {
   if (loading) {
     return (
       <div className="text-white w-full min-h-screen bg-[#2c3e50] relative">
-        <div className="relative h-96 bg-gray-700 animate-pulse">
+        <div className="relative h-[70vh] bg-gray-700 animate-pulse">
           <button
             onClick={onBack}
             className="absolute top-4 left-4 text-white bg-black/50 p-2 rounded-full z-10"
@@ -65,9 +65,9 @@ export default function MovieDetail({ movie, onBack }) {
   const details = movieDetails || movie;
 
   return (
-    <div className="text-white w-full min-h-screen bg-[#2c3e50]">
+    <div className="text-white w-full min-h-screen bg-[#2c3e50] relative">
       {/* Hero Section */}
-      <div className="relative h-[50vh] overflow-hidden">
+      <div className="relative h-[70vh] overflow-hidden">
         {!imageError && details.Poster && details.Poster !== "N/A" ? (
           <img
             src={details.Poster}
@@ -81,80 +81,111 @@ export default function MovieDetail({ movie, onBack }) {
           </div>
         )}
 
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#2c3e50] via-[#2c3e50]/80 to-transparent" />
 
         {/* Back Button */}
         <button
           onClick={onBack}
-          className="absolute top-4 left-4 text-white bg-black/50 p-2 rounded-full z-10"
+          className="absolute top-4 left-4 text-white bg-black/50 p-2 rounded-full z-10 hover:bg-black/70 transition"
         >
           <ArrowLeft size={24} />
         </button>
 
-        {/* Movie Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h1 className="text-2xl font-bold mb-2">{details.Title}</h1>
-
-          <div className="flex items-center gap-4 text-sm text-gray-300 mb-4">
-            {details.Year && (
-              <div className="flex items-center gap-1">
-                <Calendar size={16} />
-                <span>{details.Year}</span>
-              </div>
-            )}
-            {details.Runtime && (
-              <div className="flex items-center gap-1">
-                <Clock size={16} />
-                <span>{details.Runtime}</span>
-              </div>
-            )}
+        {/* Movie Info Overlay - Bottom positioned */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#2c3e50] to-transparent pt-16">
+          <div className="mb-4">
+            <h1 className="text-2xl font-bold text-white mb-1">{details.Title}</h1>
+            <div className="flex items-center gap-2 text-sm text-gray-300">
+              {details.Year && <span>{details.Year}</span>}
+              {details.Runtime && (
+                <>
+                  <span>•</span>
+                  <span>{details.Runtime}</span>
+                </>
+              )}
+            </div>
             {details.Director && details.Director !== "N/A" && (
-              <div className="flex items-center gap-1">
-                <User size={16} />
-                <span>{details.Director}</span>
-              </div>
+              <p className="text-sm text-gray-300 mt-1">Dir {details.Director}</p>
             )}
           </div>
 
           {/* Ratings */}
           <div className="flex gap-2 mb-4">
             {details.imdbRating && details.imdbRating !== "N/A" && (
-              <div className="flex items-center gap-2 bg-[#f6ad55] text-black px-3 py-1 rounded-full">
-                <Star size={16} fill="currentColor" />
-                <span className="font-bold">{details.imdbRating}</span>
-                <span className="text-xs">IMDb</span>
+              <div className="bg-[#f6ad55] text-black px-3 py-1 rounded-full text-sm font-bold">
+                ★ {details.imdbRating}
               </div>
             )}
             {details.Metascore && details.Metascore !== "N/A" && (
-              <div className="bg-[#2ECC71] text-white px-3 py-1 rounded-full">
-                <span className="font-bold">{details.Metascore}</span>
-                <span className="text-xs ml-1">Meta</span>
+              <div className="bg-[#2ECC71] text-white px-3 py-1 rounded-full text-sm font-bold">
+                {details.Metascore}
               </div>
             )}
           </div>
+
+          {/* Brief description */}
+          {details.Plot && details.Plot !== "N/A" && (
+            <p className="text-sm text-gray-300 leading-relaxed line-clamp-3 mb-4">
+              {details.Plot.substring(0, 120)}...
+            </p>
+          )}
         </div>
       </div>
 
-      {/* Content Section */}
+      {/* Action Buttons - the Log, Review, List */}
       <div className="px-4 py-6">
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <button className="bg-white text-black py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition">
+            📝 Log
+          </button>
+          <button className="bg-gray-700 text-white py-3 rounded-lg font-semibold text-sm hover:bg-gray-600 transition">
+            ⭐ Review
+          </button>
+          <button className="bg-gray-700 text-white py-3 rounded-lg font-semibold text-sm hover:bg-gray-600 transition">
+            📋 List
+          </button>
+        </div>
+
         {/* Synopsis */}
         {details.Plot && details.Plot !== "N/A" && (
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Synopsis</h3>
             <p className="text-gray-300 leading-relaxed text-sm">{details.Plot}</p>
+          </div>
+        )}
+
+        {/* Cast Section */}
+        {details.Actors && details.Actors !== "N/A" && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Cast</h3>
+              <ChevronRight className="text-[#f6ad55]" size={20} />
+            </div>
+
+            <div className="grid grid-cols-3 gap-6">
+              {details.Actors.split(", ").slice(0, 6).map((actor, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center text-xl mx-auto mb-2">
+                    👤
+                  </div>
+                  <p className="text-xs text-white font-medium leading-tight">
+                    {actor.trim()}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         {/* Genres */}
         {details.Genre && details.Genre !== "N/A" && (
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Genres</h3>
+            <h3 className="text-lg font-semibold mb-3 text-white">Genres</h3>
             <div className="flex flex-wrap gap-2">
               {details.Genre.split(", ").map((genre, index) => (
                 <span
                   key={index}
-                  className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm"
+                  className="bg-gray-700 text-white px-3 py-1 rounded-full text-sm border border-gray-600"
                 >
                   {genre}
                 </span>
@@ -163,67 +194,30 @@ export default function MovieDetail({ movie, onBack }) {
           </div>
         )}
 
-        {/* Action Buttons */}
-        <div className="flex gap-3 mb-6">
-          <button className="flex-1 bg-white text-black py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
-            📝 Log
-          </button>
-          <button className="flex-1 bg-gray-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
-            ⭐ Review
-          </button>
-          <button className="flex-1 bg-gray-700 text-white py-3 rounded-lg font-semibold flex items-center justify-center gap-2">
-            📋 List
-          </button>
-        </div>
-
-        {/* Cast Section */}
-        {details.Actors && details.Actors !== "N/A" && (
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold">Cast</h3>
-              <ChevronRight className="text-[#f6ad55]" size={20} />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              {details.Actors.split(", ").slice(0, 6).map((actor, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center text-xl mx-auto mb-2">
-                    👤
-                  </div>
-                  <p className="text-xs text-white font-medium">{actor.split(" ")[0]}</p>
-                  <p className="text-xs text-gray-400">
-                    {actor.split(" ").slice(1).join(" ")}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Additional Info */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 text-sm">
+        {/* Additional Movie Info */}
+        <div className="space-y-3 text-sm">
           {details.Country && details.Country !== "N/A" && (
-            <div>
+            <div className="flex justify-between">
               <span className="text-gray-400">Country:</span>
-              <span className="ml-2">{details.Country}</span>
+              <span className="text-white">{details.Country}</span>
             </div>
           )}
           {details.Language && details.Language !== "N/A" && (
-            <div>
+            <div className="flex justify-between">
               <span className="text-gray-400">Language:</span>
-              <span className="ml-2">{details.Language}</span>
+              <span className="text-white">{details.Language}</span>
             </div>
           )}
           {details.Writer && details.Writer !== "N/A" && (
-            <div className="md:col-span-2">
+            <div className="flex justify-between">
               <span className="text-gray-400">Writer:</span>
-              <span className="ml-2">{details.Writer}</span>
+              <span className="text-white text-right max-w-[60%]">{details.Writer}</span>
             </div>
           )}
           {details.Awards && details.Awards !== "N/A" && (
-            <div className="md:col-span-2">
+            <div className="flex justify-between">
               <span className="text-gray-400">Awards:</span>
-              <span className="ml-2">{details.Awards}</span>
+              <span className="text-white text-right max-w-[60%]">{details.Awards}</span>
             </div>
           )}
         </div>
