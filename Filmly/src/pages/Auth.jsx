@@ -13,15 +13,15 @@ export default function Auth() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!username.trim() || !password.trim()) {
       setError("Please fill in all fields");
       return;
     }
-    
+
     setLoading(true);
     setError("");
-    
+
     try {
       if (isSignup) {
         signup(username, password);
@@ -42,7 +42,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#2c3e50] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 font-sans text-textPrimary">
       {/* Background with movie collage effect */}
       <div className="absolute inset-0 opacity-10">
         <div className="grid grid-cols-4 md:grid-cols-6 gap-2 h-full">
@@ -54,12 +54,12 @@ export default function Auth() {
           ))}
         </div>
       </div>
-      
-      <div className="relative z-10 bg-[#1a202c]/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 w-full max-w-md border border-gray-700">
+
+      <div className="relative z-10 bg-card/95 backdrop-blur-sm rounded-2xl shadow-card p-8 w-full max-w-md border border-gray-700">
         {/* Logo and Title */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#f6ad55] mb-2">Filmly</h1>
-          <p className="text-white text-sm opacity-90">Your movie journey awaits</p>
+          <h1 className="text-4xl font-bold text-primary mb-2">Filmly</h1>
+          <p className="text-textPrimary text-sm opacity-90">Your movie journey awaits</p>
         </div>
 
         {/* Auth Form */}
@@ -70,18 +70,18 @@ export default function Auth() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full p-4 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f6ad55] focus:border-transparent transition"
+              className="w-full p-4 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
               disabled={loading}
             />
           </div>
-          
+
           <div>
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-4 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f6ad55] focus:border-transparent transition"
+              className="w-full p-4 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
               disabled={loading}
             />
           </div>
@@ -91,11 +91,11 @@ export default function Auth() {
               {error}
             </div>
           )}
-          
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#f6ad55] text-black py-4 rounded-lg font-bold text-lg shadow-lg hover:opacity-90 transition-all duration-200 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-primary text-black py-4 rounded-lg font-bold text-lg shadow-lg hover:opacity-90 transition-all duration-200 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="flex items-center justify-center gap-2">
@@ -117,7 +117,7 @@ export default function Auth() {
                 setIsSignup(!isSignup);
                 setError("");
               }}
-              className="text-[#f6ad55] font-semibold hover:opacity-80 transition"
+              className="text-primary font-semibold hover:opacity-80 transition"
               disabled={loading}
             >
               {isSignup ? "Login" : "Sign Up"}

@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Star, Clock, Calendar, User, ChevronRight } from "lucide-react";
+import { ArrowLeft, ChevronRight } from "lucide-react";
+import { useWatchlist } from "../context/WatchlistContext";
 
 export default function MovieDetail({ movie, onBack }) {
   const [movieDetails, setMovieDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [isSynopsisExpanded, setIsSynopsisExpanded] = useState(false);
+  const { toggleWatchlist, isInWatchlist } = useWatchlist();
 
-  const API_KEY = "81c459b3"; 
+  const API_KEY = "81c459b3"; // OMDb API (from info.json features)
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -65,7 +68,7 @@ export default function MovieDetail({ movie, onBack }) {
   const details = movieDetails || movie;
 
   return (
-    <div className="text-white w-full min-h-screen bg-[#2c3e50] relative">
+    <div className="text-textPrimary w-full min-h-screen bg-background relative font-sans">
       {/* Hero Section */}
       <div className="relative h-[70vh] overflow-hidden">
         {!imageError && details.Poster && details.Poster !== "N/A" ? (
@@ -73,6 +76,7 @@ export default function MovieDetail({ movie, onBack }) {
             src={details.Poster}
             alt={details.Title}
             className="w-full h-full object-cover"
+            referrerPolicy="no-referrer"
             onError={handleImageError}
           />
         ) : (
@@ -82,7 +86,7 @@ export default function MovieDetail({ movie, onBack }) {
         )}
 
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#2c3e50] via-[#2c3e50]/80 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
 
         {/* Back Button */}
         <button
@@ -95,8 +99,8 @@ export default function MovieDetail({ movie, onBack }) {
         {/* Movie Info Overlay - Bottom positioned */}
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#2c3e50] to-transparent pt-16">
           <div className="mb-4">
-            <h1 className="text-2xl font-bold text-white mb-1">{details.Title}</h1>
-            <div className="flex items-center gap-2 text-sm text-gray-300">
+            <h1 className="text-2xl font-bold text-textPrimary mb-1">{details.Title}</h1>
+            <div className="flex items-center gap-2 text-sm text-textSecondary">
               {details.Year && <span>{details.Year}</span>}
               {details.Runtime && (
                 <>
@@ -106,19 +110,27 @@ export default function MovieDetail({ movie, onBack }) {
               )}
             </div>
             {details.Director && details.Director !== "N/A" && (
-              <p className="text-sm text-gray-300 mt-1">Dir {details.Director}</p>
+              <p className="text-sm text-textSecondary mt-1">Dir {details.Director}</p>
             )}
           </div>
 
           {/* Ratings */}
           <div className="flex gap-2 mb-4">
             {details.imdbRating && details.imdbRating !== "N/A" && (
-              <div className="bg-[#f6ad55] text-black px-3 py-1 rounded-full text-sm font-bold">
+              <div className="bg-primary text-black px-3 py-1 rounded-full text-sm font-bold">
                 ★ {details.imdbRating}
               </div>
             )}
+            {(() => {
+              const rt = details.Ratings?.find((r) => r.Source === "Rotten Tomatoes");
+              return rt ? (
+                <div className="bg-primary text-black px-3 py-1 rounded-full text-sm font-bold">
+                  🍅 {rt.Value}
+                </div>
+              ) : null;
+            })()}
             {details.Metascore && details.Metascore !== "N/A" && (
-              <div className="bg-[#2ECC71] text-white px-3 py-1 rounded-full text-sm font-bold">
+              <div className="bg-secondary text-white px-3 py-1 rounded-full text-sm font-bold">
                 {details.Metascore}
               </div>
             )}
@@ -126,9 +138,17 @@ export default function MovieDetail({ movie, onBack }) {
 
           {/* Brief description */}
           {details.Plot && details.Plot !== "N/A" && (
-            <p className="text-sm text-gray-300 leading-relaxed line-clamp-3 mb-4">
-              {details.Plot.substring(0, 120)}...
-            </p>
+            <>
+              <p className={`text-sm text-textSecondary leading-relaxed ${isSynopsisExpanded ? "" : "line-clamp-3"} mb-2`}>
+                {details.Plot}
+              </p>
+              <button
+                onClick={() => setIsSynopsisExpanded(!isSynopsisExpanded)}
+                className="text-primary text-sm font-semibold"
+              >
+                {isSynopsisExpanded ? "Show less" : "Read more"}
+              </button>
+            </>
           )}
         </div>
       </div>
@@ -142,15 +162,21 @@ export default function MovieDetail({ movie, onBack }) {
           <button className="bg-gray-700 text-white py-3 rounded-lg font-semibold text-sm hover:bg-gray-600 transition">
             ⭐ Review
           </button>
-          <button className="bg-gray-700 text-white py-3 rounded-lg font-semibold text-sm hover:bg-gray-600 transition">
-            📋 List
+          <button
+            onClick={() => toggleWatchlist(details)}
+            className={`py-3 rounded-lg font-semibold text-sm transition ${isInWatchlist(details.imdbID)
+              ? "bg-primary text-black hover:opacity-90"
+              : "bg-gray-700 text-white hover:bg-gray-600"
+              }`}
+          >
+            📋 {isInWatchlist(details.imdbID) ? "In List" : "List"}
           </button>
         </div>
 
-        {/* Synopsis */}
+        {/* Synopsis (full on larger screens) */}
         {details.Plot && details.Plot !== "N/A" && (
-          <div className="mb-6">
-            <p className="text-gray-300 leading-relaxed text-sm">{details.Plot}</p>
+          <div className="mb-6 hidden md:block">
+            <p className="text-textSecondary leading-relaxed text-sm">{details.Plot}</p>
           </div>
         )}
 
@@ -158,17 +184,17 @@ export default function MovieDetail({ movie, onBack }) {
         {details.Actors && details.Actors !== "N/A" && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Cast</h3>
-              <ChevronRight className="text-[#f6ad55]" size={20} />
+              <h3 className="text-lg font-semibold text-textPrimary">Cast</h3>
+              <ChevronRight className="text-primary" size={20} />
             </div>
 
-            <div className="grid grid-cols-3 gap-6">
-              {details.Actors.split(", ").slice(0, 6).map((actor, index) => (
-                <div key={index} className="text-center">
-                  <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center text-xl mx-auto mb-2">
+            <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+              {details.Actors.split(", ").slice(0, 10).map((actor, index) => (
+                <div key={index} className="text-center min-w-[90px] snap-start">
+                  <div className="w-16 h-16 bg-gray-600 rounded-full flex items-center justify-center text-xl mx-auto mb-2 flex-shrink-0">
                     👤
                   </div>
-                  <p className="text-xs text-white font-medium leading-tight">
+                  <p className="text-xs text-textPrimary font-medium leading-tight">
                     {actor.trim()}
                   </p>
                 </div>
@@ -180,12 +206,12 @@ export default function MovieDetail({ movie, onBack }) {
         {/* Genres */}
         {details.Genre && details.Genre !== "N/A" && (
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3 text-white">Genres</h3>
+            <h3 className="text-lg font-semibold mb-3 text-textPrimary">Genres</h3>
             <div className="flex flex-wrap gap-2">
               {details.Genre.split(", ").map((genre, index) => (
                 <span
                   key={index}
-                  className="bg-gray-700 text-white px-3 py-1 rounded-full text-sm border border-gray-600"
+                  className="bg-gray-700 text-textPrimary px-3 py-1 rounded-full text-sm border border-gray-600"
                 >
                   {genre}
                 </span>
@@ -198,26 +224,26 @@ export default function MovieDetail({ movie, onBack }) {
         <div className="space-y-3 text-sm">
           {details.Country && details.Country !== "N/A" && (
             <div className="flex justify-between">
-              <span className="text-gray-400">Country:</span>
-              <span className="text-white">{details.Country}</span>
+              <span className="text-textSecondary">Country:</span>
+              <span className="text-textPrimary">{details.Country}</span>
             </div>
           )}
           {details.Language && details.Language !== "N/A" && (
             <div className="flex justify-between">
-              <span className="text-gray-400">Language:</span>
-              <span className="text-white">{details.Language}</span>
+              <span className="text-textSecondary">Language:</span>
+              <span className="text-textPrimary">{details.Language}</span>
             </div>
           )}
           {details.Writer && details.Writer !== "N/A" && (
             <div className="flex justify-between">
-              <span className="text-gray-400">Writer:</span>
-              <span className="text-white text-right max-w-[60%]">{details.Writer}</span>
+              <span className="text-textSecondary">Writer:</span>
+              <span className="text-textPrimary text-right max-w-[60%]">{details.Writer}</span>
             </div>
           )}
           {details.Awards && details.Awards !== "N/A" && (
             <div className="flex justify-between">
-              <span className="text-gray-400">Awards:</span>
-              <span className="text-white text-right max-w-[60%]">{details.Awards}</span>
+              <span className="text-textSecondary">Awards:</span>
+              <span className="text-textPrimary text-right max-w-[60%]">{details.Awards}</span>
             </div>
           )}
         </div>

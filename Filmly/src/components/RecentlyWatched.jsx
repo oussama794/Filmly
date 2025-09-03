@@ -13,7 +13,7 @@ export default function RecentlyWatched({ onMovieClick }) {
     };
 
     getRecentMovies();
-    
+
     // Listen for storage changes
     const handleStorageChange = () => {
       getRecentMovies();
@@ -26,13 +26,13 @@ export default function RecentlyWatched({ onMovieClick }) {
   // Function to add movie to recently watched (to be called when viewing movie details)
   const addToRecentlyWatched = (movie) => {
     const recent = JSON.parse(localStorage.getItem("recentlyWatched") || "[]");
-    
+
     // Remove if already exists
     const filteredRecent = recent.filter(m => m.imdbID !== movie.imdbID);
-    
+
     // Add to beginning
     const updatedRecent = [movie, ...filteredRecent].slice(0, 20); // Keep only 20 recent
-    
+
     localStorage.setItem("recentlyWatched", JSON.stringify(updatedRecent));
     setRecentMovies(updatedRecent.slice(0, 6));
   };
@@ -55,10 +55,10 @@ export default function RecentlyWatched({ onMovieClick }) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-white">Recently Watched</h2>
-        <ChevronRight className="text-[#f6ad55]" size={24} />
+        <h2 className="text-xl font-bold text-textPrimary">Recently Watched</h2>
+        <ChevronRight className="text-primary" size={24} />
       </div>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {recentMovies.map((movie, index) => (
           <MovieCard

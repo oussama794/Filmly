@@ -1,0 +1,136 @@
+{
+    "project": {
+      "name": "Filmly Movie Review App",
+      "description": "A movie discovery app built with React, Vite, and Tailwind CSS. It features a sleek dark theme with golden accents, user profiles, and comprehensive movie details, focusing on a mobile-first responsive design and enhanced user experience.",
+      "technologies": [
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "OMDb API"
+      ],
+      "designSystem": {
+        "colorScheme": {
+          "background": "#1a202c",
+          "primaryAccent": "#f6ad55",
+          "secondaryAccent": "#2ECC71",
+          "textPrimary": "#E2E8F0",
+          "textSecondary": "#A0AEC0",
+          "cardBackground": "#2D3748"
+        },
+        "typography": {
+          "fontFamily": "Inter, sans-serif",
+          "headings": "Clean, modern, high contrast",
+          "bodyText": "Readable, high contrast",
+          "accents": "Golden yellow"
+        },
+        "layout": {
+          "mode": "Mobile-First Responsive",
+          "baseLayout": "Dark theme with rounded corners on all cards and elements. Content centered with padding.",
+          "navigation": "Bottom tab navigation for main screens (Home, Search, Profile). Top search bar on Home screen."
+        },
+        "components": {
+          "cards": "Movie posters with rounded corners, overlay text, and ratings badges.",
+          "buttons": "Golden yellow login button with hover effects, icons for action buttons (Log, Review, List) with rounded borders."
+        }
+      },
+      "features": [
+        "Real-time movie search with autocomplete",
+        "User authentication and profile management",
+        "Personalized movie recommendations ('For You' section)",
+        "Recently watched tracking",
+        "Detailed movie pages with cast and ratings",
+        "Watchlist functionality",
+        "Sort and filter movies by genre, year, rating"
+      ],
+      "screens": [
+        {
+          "name": "Login Screen",
+          "path": "/login",
+          "description": "A clean login card overlaid on a movie poster background. The card has rounded corners, a 'Your movie journey awaits' tagline, and simple username/password inputs.",
+          "components": [
+            {
+              "name": "AuthCard",
+              "description": "A card with a semi-transparent dark background, rounded corners, and a title."
+            },
+            {
+              "name": "InputFields",
+              "description": "Username and password input fields with golden borders on focus."
+            },
+            {
+              "name": "LoginButton",
+              "description": "A full-width button with a solid golden yellow background and white text."
+            }
+          ]
+        },
+        {
+          "name": "Home Screen",
+          "path": "/home",
+          "description": "The main dashboard with a top search bar, and horizontal scrollable sections for 'Popular' and 'For You' movies. A fixed bottom navigation bar is present.",
+          "components": [
+            {
+              "name": "BottomNavigation",
+              "description": "A fixed bottom navigation bar with icons for Home, Search, and Profile. The active icon is golden."
+            },
+            {
+              "name": "SearchBar",
+              "description": "A top search bar with a search icon and 'Filter & sort' options."
+            },
+            {
+              "name": "HorizontalMovieSection",
+              "description": "A horizontally scrollable container displaying MovieCard components with titles like 'Popular' and 'For You'."
+            },
+            {
+              "name": "MovieCard",
+              "description": "A component displaying a movie poster with a title, rating, and year overlayed on it."
+            }
+          ]
+        },
+        {
+          "name": "Movie Detail Screen",
+          "path": "/movie/:id",
+          "description": "A detailed page for a specific movie. It features a large poster at the top, followed by sections for movie information, plot synopsis, ratings badges, action buttons, and a cast list.",
+          "components": [
+            {
+              "name": "MovieHeader",
+              "description": "Displays the movie poster, title, year, duration, and director."
+            },
+            {
+              "name": "SynopsisSection",
+              "description": "Contains the movie's plot with an option to expand the text."
+            },
+            {
+              "name": "RatingBadges",
+              "description": "Small badges for IMDb and Rotten Tomatoes ratings, with a yellow background."
+            },
+            {
+              "name": "ActionButtons",
+              "description": "A set of buttons (Log, Review, List) with rounded corners and icons."
+            },
+            {
+              "name": "CastSection",
+              "description": "A horizontally scrollable list of actor photos with their names and roles."
+            }
+          ]
+        },
+        {
+          "name": "Profile Screen",
+          "path": "/profile",
+          "description": "A user profile page with an avatar, name, and bio. It includes a social media link (Instagram) and displays 'Top 3' favorite movies and a 'Recent Watched' movie grid.",
+          "components": [
+            {
+              "name": "UserProfileHeader",
+              "description": "Displays the user's avatar, name, bio, and social media links."
+            },
+            {
+              "name": "FavoriteMoviesSection",
+              "description": "A section displaying the user's 'Top 3' favorite movies using MovieCard components."
+            },
+            {
+              "name": "RecentlyWatchedSection",
+              "description": "A grid or horizontal list displaying the user's recently watched movies."
+            }
+          ]
+        }
+      ]
+    }
+  }

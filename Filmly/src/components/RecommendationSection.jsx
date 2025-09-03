@@ -13,14 +13,17 @@ export default function RecommendationSection({ title, onMovieClick }) {
     try {
       const searchTerms = ["popular", "action", "drama", "Thriller"];
       const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)];
-      
+
       const response = await fetch(
         `https://www.omdbapi.com/?apikey=${API_KEY}&s=${randomTerm}&type=movie&page=1`
       );
       const data = await response.json();
-      
+
       if (data.Response === "True") {
-        setMovies(data.Search.slice(0, 6)); // Show first 6 movies
+        const withPosters = (data.Search || []).filter(
+          (m) => m.Poster && m.Poster !== "N/A" && m.Poster.includes("http")
+        );
+        setMovies(withPosters.slice(0, 6));
       }
     } catch (error) {
       console.error("Error fetching recommendations:", error);
@@ -55,10 +58,10 @@ export default function RecommendationSection({ title, onMovieClick }) {
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-white">{title}</h2>
-        <ChevronRight className="text-[#f6ad55]" size={24} />
+        <h2 className="text-xl font-bold text-textPrimary">{title}</h2>
+        <ChevronRight className="text-primary" size={24} />
       </div>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 overflow-x-auto">
         {movies.map((movie, index) => (
           <MovieCard
@@ -68,7 +71,7 @@ export default function RecommendationSection({ title, onMovieClick }) {
           />
         ))}
       </div>
-      
+
       {movies.length === 0 && (
         <div className="text-center text-gray-400 py-8">
           <p>No recommendations available</p>

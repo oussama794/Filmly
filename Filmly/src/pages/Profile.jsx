@@ -3,31 +3,33 @@ import { useAuth } from "../context/AuthContext";
 import { ChevronRight, LogOut, Camera, MapPin, Instagram } from "lucide-react";
 import MovieCard from "../components/MovieCard";
 import MovieDetail from "./MovieDetail";
+import { useWatchlist } from "../context/WatchlistContext";
 
 export default function Profile() {
   const { user, logout } = useAuth();
   const [recentMovies, setRecentMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const { watchlist } = useWatchlist();
   const [profile, setProfile] = useState({
     bio: user?.bio || "Anything",
     location: user?.location || "Casablanca",
     social: user?.social || "instagram"
   });
-  
+
   // Mock top 3 favorite movies
   const [topMovies] = useState([
     {
       imdbID: "tt0111161",
-      Title: "The Shawshank Redemption", 
+      Title: "The Shawshank Redemption",
       Year: "1994",
       Poster: "https://m.media-amazon.com/images/M/MV5BNDE3ODcxYzMtY2YzZC00NmNlLWJiNDMtZDViZWM2MzIxZDYwXkEyXkFqcGdeQXVyNjAwNDUxODI@._V1_SX300.jpg"
     },
     {
-      imdbID: "tt0068646",
-      Title: "The Godfather",
-      Year: "1972", 
-      Poster: "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzUwNzIzMzg@._V1_SX300.jpg"
+      imdbID: "tt0166924",
+      Title: "Mulholland Drive",
+      Year: "2001",
+      Poster: "https://upload.wikimedia.org/wikipedia/en/0/0f/Mulholland.png"
     },
     {
       imdbID: "tt0468569",
@@ -70,14 +72,14 @@ export default function Profile() {
   }
 
   return (
-    <div className="text-white w-full min-h-screen bg-[#2c3e50] relative">
+    <div className="text-textPrimary w-full min-h-screen bg-background relative font-sans">
       {/* Header */}
       <div className="flex items-center justify-between p-4 mb-6">
         <div className="w-6" />
-        <h1 className="text-xl font-semibold">Oussama</h1>
+        <h1 className="text-xl font-semibold">{user?.username || "User"}</h1>
         <button
           onClick={handleLogout}
-          className="text-white hover:text-[#f6ad55] transition p-1"
+          className="text-textPrimary hover:text-primary transition p-1"
         >
           <div className="flex flex-col gap-1">
             <div className="w-1 h-1 bg-current rounded-full"></div>
@@ -99,19 +101,19 @@ export default function Profile() {
 
           {/* Bio */}
           <div className="mb-4">
-            <p className="text-gray-300 italic text-sm">
+            <p className="text-textSecondary italic text-sm">
               "{profile.bio}"
             </p>
           </div>
 
           {/* Location */}
-          <div className="flex items-center justify-center mb-2 text-[#2ECC71]">
+          <div className="flex items-center justify-center mb-2 text-secondary">
             <MapPin size={16} className="mr-1" />
             <span className="text-sm">{profile.location}</span>
           </div>
 
           {/* Social */}
-          <div className="flex items-center justify-center mb-6 text-gray-400">
+          <div className="flex items-center justify-center mb-6 text-textSecondary">
             <Instagram size={16} className="mr-1" />
             <span className="text-sm">{profile.social}</span>
           </div>
@@ -120,10 +122,10 @@ export default function Profile() {
         {/* TOP 3 Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">TOP 3</h3>
-            <ChevronRight className="text-[#f6ad55]" size={20} />
+            <h3 className="text-lg font-semibold text-textPrimary">TOP 3</h3>
+            <ChevronRight className="text-primary" size={20} />
           </div>
-          
+
           <div className="grid grid-cols-3 gap-3">
             {topMovies.map((movie, index) => (
               <div key={movie.imdbID} className="relative cursor-pointer" onClick={() => handleMovieClick(movie)}>
@@ -134,7 +136,7 @@ export default function Profile() {
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />
                 </div>
-                <div className="absolute top-2 left-2 bg-[#f6ad55] text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
+                <div className="absolute top-2 left-2 bg-primary text-black rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold">
                   {index + 1}
                 </div>
               </div>
@@ -145,10 +147,10 @@ export default function Profile() {
         {/* RECENT WATCHED Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">RECENT WATCHED</h3>
-            <ChevronRight className="text-[#f6ad55]" size={20} />
+            <h3 className="text-lg font-semibold text-textPrimary">RECENT WATCHED</h3>
+            <ChevronRight className="text-primary" size={20} />
           </div>
-          
+
           {recentMovies.length > 0 ? (
             <div className="grid grid-cols-3 gap-3">
               {recentMovies.map((movie, index) => (
@@ -164,9 +166,37 @@ export default function Profile() {
               ))}
             </div>
           ) : (
-            <div className="text-center text-gray-400 py-8 bg-gray-800/30 rounded-xl border border-gray-700">
+            <div className="text-center text-textSecondary py-8 bg-gray-800/30 rounded-xl border border-gray-700">
               <p className="text-sm">No recent movies</p>
               <p className="text-xs mt-1 opacity-75">Start watching to see your history</p>
+            </div>
+          )}
+        </div>
+
+        {/* WATCHLIST Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-textPrimary">WATCHLIST</h3>
+            <ChevronRight className="text-primary" size={20} />
+          </div>
+          {watchlist.length > 0 ? (
+            <div className="grid grid-cols-3 gap-3">
+              {watchlist.slice(0, 9).map((movie, index) => (
+                <div key={`wl-${movie.imdbID}-${index}`} className="cursor-pointer" onClick={() => handleMovieClick(movie)}>
+                  <div className="aspect-[2/3] rounded-xl overflow-hidden shadow-lg">
+                    <img
+                      src={movie.Poster}
+                      alt={movie.Title}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-textSecondary py-8 bg-gray-800/30 rounded-xl border border-gray-700">
+              <p className="text-sm">No movies in your list</p>
+              <p className="text-xs mt-1 opacity-75">Add some from the movie details page</p>
             </div>
           )}
         </div>
