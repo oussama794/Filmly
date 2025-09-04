@@ -86,13 +86,9 @@ src/
 
 Get your free API key at [OMDb API](https://www.omdbapi.com/apikey.aspx) 🗝️
 
-## 📸 Screenshots
-
-Coming soon! 📷
-
 ## 🌐 Live Demo
 
-Coming soon! 🚀
+https://filmly-8arfjbzzk-oussamas-projects-fb0a6107.vercel.app/ 🚀
 
 ---
 
